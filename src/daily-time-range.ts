@@ -1,15 +1,17 @@
-class TimeRange {
+import type { IDailyTimeConfig, IDailyTimeRange } from './types';
+
+class DailyTimeRange implements IDailyTimeRange {
   public readonly priority;
 
   private _isNow = false;
   private startTime;
   private endTime;
 
-  constructor(start: string, end: string, priority: number) {
-    this.startTime = this.toDailyMinutes(start);
-    this.endTime = this.toDailyMinutes(end);
+  constructor(config: IDailyTimeConfig) {
+    this.startTime = this.toDailyMinutes(config.start);
+    this.endTime = this.toDailyMinutes(config.end);
 
-    this.priority = priority;
+    this.priority = config.priority;
   }
 
   public update(time: string) {
@@ -28,4 +30,4 @@ class TimeRange {
   }
 }
 
-export default TimeRange;
+export default DailyTimeRange;

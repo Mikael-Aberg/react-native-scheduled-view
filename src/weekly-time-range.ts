@@ -1,6 +1,8 @@
+import type { IWeeklyTimeConfig, IWeeklyTimeRange } from './types';
+
 const MINUTES_IN_A_DAY = 1440;
 
-class WeeklyTimeRange {
+class WeeklyTimeRange implements IWeeklyTimeRange {
   public readonly priority;
 
   private startMinutes;
@@ -13,17 +15,11 @@ class WeeklyTimeRange {
   // private _minutesSinceStart = -1;
   // private _minutesSinceEnd = -1;
 
-  constructor(
-    startDay: number,
-    startTime: string,
-    endDay: number,
-    endTime: string,
-    priority: number
-  ) {
-    this.priority = priority;
+  constructor(config: IWeeklyTimeConfig) {
+    this.priority = config.priority;
 
-    this.startMinutes = this.toWeeklyMinutes(startDay, startTime);
-    this.endMinutes = this.toWeeklyMinutes(endDay, endTime);
+    this.startMinutes = this.toWeeklyMinutes(config.startDay, config.startTime);
+    this.endMinutes = this.toWeeklyMinutes(config.endDay, config.endTime);
 
     // Handle week-crossing case (e.g., Sunday 20:00 → Monday 04:00)
     if (this.endMinutes < this.startMinutes) {
