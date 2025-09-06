@@ -47,6 +47,8 @@ async function minifyFiles(pattern) {
       console.error(`Error processing ${file}:`, error.message);
     }
   }
+
+  console.log(`Minified ${files.length} files in ${pattern}`);
 }
 
 async function main() {
