@@ -59,9 +59,12 @@ class TimeRangeManager {
 
     this.listeners.set(o.id, o);
 
-    console.log(this.listeners);
-
     this.startCheckInterval();
+    this.update(
+      ranges.filter((x) => x.type === 'daily').map((x) => x.id),
+      ranges.filter((x) => x.type === 'weekly').map((x) => x.id),
+      [o.id]
+    );
 
     return {
       remove: () => {
