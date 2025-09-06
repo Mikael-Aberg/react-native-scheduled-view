@@ -163,13 +163,15 @@
       [
         "commonjs",
         {
-          "esm": true
+          "esm": true,
+          "minify": true
         }
       ],
       [
         "module",
         {
-          "esm": true
+          "esm": true,
+          "minify": true
         }
       ],
       [
