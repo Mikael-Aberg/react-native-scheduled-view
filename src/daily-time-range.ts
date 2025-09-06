@@ -2,16 +2,21 @@ import type { IDailyTimeConfig, IDailyTimeRange } from './types';
 
 class DailyTimeRange implements IDailyTimeRange {
   public readonly priority;
+  public readonly type;
+  public readonly id;
 
+  private _listeners = 0;
   private _isNow = false;
-  private startTime;
-  private endTime;
+  private readonly startTime;
+  private readonly endTime;
 
   constructor(config: IDailyTimeConfig) {
+    this.priority = config.priority;
+    this.type = config.type;
+    this.id = `${config.start}:${config.end}:${config.priority}`;
+
     this.startTime = this.toDailyMinutes(config.start);
     this.endTime = this.toDailyMinutes(config.end);
-
-    this.priority = config.priority;
   }
 
   public update(time: string) {
@@ -20,8 +25,20 @@ class DailyTimeRange implements IDailyTimeRange {
     this._isNow = this.startTime <= check && check < this.endTime;
   }
 
+  public addListener() {
+    this._listeners++;
+  }
+
+  public removeListener() {
+    this._listeners--;
+  }
+
   get isNow() {
     return this._isNow;
+  }
+
+  get listeners() {
+    return this._listeners;
   }
 
   private toDailyMinutes(time: string) {

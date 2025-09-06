@@ -4,19 +4,19 @@ const MINUTES_IN_A_DAY = 1440;
 
 class WeeklyTimeRange implements IWeeklyTimeRange {
   public readonly priority;
+  public readonly type;
+  public readonly id;
 
-  private startMinutes;
-  private endMinutes;
+  private readonly startMinutes;
+  private readonly endMinutes;
 
+  private _listeners = 0;
   private _isNow = false;
-
-  // private _minutesUntilStart = -1;
-  // private _minutesUntilEnd = -1;
-  // private _minutesSinceStart = -1;
-  // private _minutesSinceEnd = -1;
 
   constructor(config: IWeeklyTimeConfig) {
     this.priority = config.priority;
+    this.type = config.type;
+    this.id = `${config.startDay}:${config.startTime}:${config.endDay}:${config.endTime}:${config.priority}`;
 
     this.startMinutes = this.toWeeklyMinutes(config.startDay, config.startTime);
     this.endMinutes = this.toWeeklyMinutes(config.endDay, config.endTime);
@@ -29,13 +29,6 @@ class WeeklyTimeRange implements IWeeklyTimeRange {
 
   public update(day: number, time: string) {
     let checkMinutes = this.toWeeklyMinutes(day, time);
-    // const originalCheckMinutes = checkMinutes;
-
-    // this._minutesUntilStart = this.startMinutes - checkMinutes;
-    // this._minutesUntilEnd = this.endMinutes - checkMinutes;
-
-    // this._minutesSinceStart = checkMinutes - this.startMinutes;
-    // this._minutesSinceEnd = checkMinutes - this.endMinutes;
 
     if (checkMinutes < this.startMinutes) {
       checkMinutes += 7 * MINUTES_IN_A_DAY;
@@ -43,49 +36,23 @@ class WeeklyTimeRange implements IWeeklyTimeRange {
 
     this._isNow =
       this.startMinutes <= checkMinutes && checkMinutes < this.endMinutes;
+  }
 
-    // // Check times Until next week
-    // if (originalCheckMinutes > this.startMinutes) {
-    //   this._minutesUntilStart =
-    //     this.startMinutes + 7 * MINUTES_IN_A_DAY - originalCheckMinutes;
-    // }
-    // if (originalCheckMinutes > this.endMinutes) {
-    //   this._minutesUntilEnd =
-    //     this.endMinutes + 7 * MINUTES_IN_A_DAY - originalCheckMinutes;
-    // }
+  public addListener() {
+    this._listeners++;
+  }
 
-    // if (originalCheckMinutes < this.endMinutes) {
-    //   this._minutesSinceEnd = Math.abs(
-    //     this.endMinutes - 7 * MINUTES_IN_A_DAY - originalCheckMinutes
-    //   );
-    // }
+  public removeListener() {
+    this._listeners--;
+  }
 
-    // if (originalCheckMinutes < this.startMinutes) {
-    //   this._minutesSinceStart = Math.abs(
-    //     this.startMinutes - 7 * MINUTES_IN_A_DAY - originalCheckMinutes
-    //   );
-    // }
+  public get listeners() {
+    return this._listeners;
   }
 
   public get isNow() {
     return this._isNow;
   }
-
-  // public get minutesUntilEnd() {
-  //   return this._minutesUntilEnd;
-  // }
-
-  // public get minutesUntilStart() {
-  //   return this._minutesUntilStart;
-  // }
-
-  // public get minutesSinceEnd() {
-  //   return this._minutesSinceEnd;
-  // }
-
-  // public get minutesSinceStart() {
-  //   return this._minutesSinceStart;
-  // }
 
   private toWeeklyMinutes(day: number, time: string) {
     const split = time.split(':').map(Number);
