@@ -1,8 +1,8 @@
-import type { ISpanTimeConfig, ISpanTimeRange } from './types';
+import type { ISpanTimeConfig, ITimeRange } from './types';
 
 const MINUTES_IN_A_DAY = 1440;
 
-class SpanTimeRange implements ISpanTimeRange {
+class TimeRange implements ITimeRange {
   public readonly priority;
   public readonly type;
   public readonly id;
@@ -60,4 +60,4 @@ class SpanTimeRange implements ISpanTimeRange {
   }
 }
 
-export default SpanTimeRange;
+export default TimeRange;
