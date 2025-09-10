@@ -111,7 +111,7 @@ class TimeRangeManager {
         .filter((x) => x.isNow)
         .sort((a, b) => a.priority - b.priority)[0];
 
-      if (highestPriority?.isNow) {
+      if (highestPriority) {
         config.onShow();
       } else {
         config.onHide();
