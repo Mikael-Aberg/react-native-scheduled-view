@@ -31,17 +31,16 @@ class TimeRangeManager {
     const ranges: ITimeRange[] = [];
 
     times.forEach((time) => {
-      let range;
       switch (time.type) {
         case 'daily':
           for (const day of time.days) {
-            range = this.createSpanTime(this.dailyToSpan(time, day));
+            const range = this.createSpanTime(this.dailyToSpan(time, day));
             range.addListener();
             ranges.push(range);
           }
           break;
         case 'span':
-          range = this.createSpanTime(time);
+          const range = this.createSpanTime(time);
           range.addListener();
           ranges.push(range);
           break;
