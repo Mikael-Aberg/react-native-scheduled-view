@@ -1,17 +1,15 @@
-import DailyTimeRange from './daily-time-range';
 import SpanTimeRange from './span-time-range';
 import type {
   IDailyTimeConfig,
-  IDailyTimeRange,
-  ISpanTimeRange,
   ISpanTimeConfig,
   TimeConfig,
+  ITimeRange,
 } from './types';
 
 interface IListener {
   onShow: () => void;
   onHide: () => void;
-  ranges: (IDailyTimeRange | ISpanTimeRange)[];
+  ranges: ITimeRange[];
   id: number;
 }
 
@@ -21,8 +19,7 @@ class TimeRangeManager {
   private timeCheckInterval: NodeJS.Timeout | null = null;
   private firstCheckTimeout: NodeJS.Timeout | null = null;
 
-  private readonly dailyTimes: Record<string, IDailyTimeRange> = {};
-  private readonly spanTimes: Record<string, ISpanTimeRange> = {};
+  private readonly timeRanges: Record<string, ITimeRange> = {};
 
   private readonly listeners = new Map<number, IListener>();
 
@@ -31,21 +28,23 @@ class TimeRangeManager {
     onShow: () => void,
     onHide: () => void
   ) {
-    const ranges: (IDailyTimeRange | ISpanTimeRange)[] = [];
+    const ranges: ITimeRange[] = [];
 
     times.forEach((time) => {
-      let range;
       switch (time.type) {
         case 'daily':
-          range = this.createDailyTime(time);
+          for (const day of time.days) {
+            const range = this.createSpanTime(this.dailyToSpan(time, day));
+            range.addListener();
+            ranges.push(range);
+          }
           break;
         case 'span':
-          range = this.createSpanTime(time);
+          const range = this.createSpanTime(time);
+          range.addListener();
+          ranges.push(range);
           break;
       }
-
-      range.addListener();
-      ranges.push(range);
     });
 
     const o: IListener = {
@@ -61,8 +60,7 @@ class TimeRangeManager {
 
     this.startCheckInterval();
     this.update(
-      ranges.filter((x) => x.type === 'daily').map((x) => x.id),
-      ranges.filter((x) => x.type === 'span').map((x) => x.id),
+      ranges.map((x) => x.id),
       [o.id]
     );
 
@@ -80,17 +78,23 @@ class TimeRangeManager {
     };
   }
 
-  private updateTimes(dailyKeys: string[], weeklyKeys: string[]) {
+  private dailyToSpan(time: IDailyTimeConfig, day: number): ISpanTimeConfig {
+    return {
+      startTime: time.start,
+      endTime: time.end,
+      startDay: day,
+      endDay: day,
+      priority: time.priority,
+      type: 'span',
+    };
+  }
+
+  private updateTimes(keys: string[]) {
     const { time, dayOfWeek } = this.getUpdateParams();
 
-    console.log(`Updating ${weeklyKeys.length} span times`);
-    weeklyKeys.forEach((key) => {
-      this.spanTimes[key]?.update(dayOfWeek, time);
-    });
-
-    console.log(`Updating ${dailyKeys.length} daily times`);
-    dailyKeys.forEach((key) => {
-      this.dailyTimes[key]?.update(time);
+    console.log(`Updating ${keys.length} times`);
+    keys.forEach((key) => {
+      this.timeRanges[key]?.update(dayOfWeek, time);
     });
   }
 
@@ -149,12 +153,11 @@ class TimeRangeManager {
   }
 
   private update(
-    daily: string[] = this.dailyKeys,
-    span: string[] = this.spanKeys,
+    times: string[] = this.timeKeys,
     listeners: number[] = this.listenerKeys
   ) {
     console.log('Update');
-    this.updateTimes(daily, span);
+    this.updateTimes(times);
     this.updateListeners(listeners);
   }
 
@@ -185,43 +188,24 @@ class TimeRangeManager {
     }
   }
 
-  private removeTime(time: IDailyTimeRange | ISpanTimeRange) {
-    switch (time.type) {
-      case 'daily':
-        delete this.dailyTimes[time.id];
-        break;
-      case 'span':
-        delete this.spanTimes[time.id];
-        break;
-    }
-  }
-
-  private createDailyTime(time: IDailyTimeConfig) {
-    const id = `${time.start}:${time.end}:${time.priority}`;
-
-    this.dailyTimes[id] ??= new DailyTimeRange(time);
-
-    return this.dailyTimes[id];
+  private removeTime(time: ITimeRange) {
+    delete this.timeRanges[time.id];
   }
 
   private createSpanTime(time: ISpanTimeConfig) {
     const id = `${time.startDay}:${time.startTime}:${time.endDay}:${time.endTime}:${time.priority}`;
 
-    this.spanTimes[id] ??= new SpanTimeRange(time);
+    this.timeRanges[id] ??= new SpanTimeRange(time);
 
-    return this.spanTimes[id];
+    return this.timeRanges[id];
   }
 
   private getToday() {
     return new Date();
   }
 
-  private get spanKeys() {
-    return Object.keys(this.spanTimes);
-  }
-
-  private get dailyKeys() {
-    return Object.keys(this.dailyTimes);
+  private get timeKeys() {
+    return Object.keys(this.timeRanges);
   }
 
   private get listenerKeys() {
