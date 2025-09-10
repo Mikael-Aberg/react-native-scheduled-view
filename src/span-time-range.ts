@@ -1,8 +1,8 @@
-import type { IWeeklyTimeConfig, IWeeklyTimeRange } from './types';
+import type { ISpanTimeConfig, ISpanTimeRange } from './types';
 
 const MINUTES_IN_A_DAY = 1440;
 
-class WeeklyTimeRange implements IWeeklyTimeRange {
+class SpanTimeRange implements ISpanTimeRange {
   public readonly priority;
   public readonly type;
   public readonly id;
@@ -13,7 +13,7 @@ class WeeklyTimeRange implements IWeeklyTimeRange {
   private _listeners = 0;
   private _isNow = false;
 
-  constructor(config: IWeeklyTimeConfig) {
+  constructor(config: ISpanTimeConfig) {
     this.priority = config.priority;
     this.type = config.type;
     this.id = `${config.startDay}:${config.startTime}:${config.endDay}:${config.endTime}:${config.priority}`;
@@ -60,4 +60,4 @@ class WeeklyTimeRange implements IWeeklyTimeRange {
   }
 }
 
-export default WeeklyTimeRange;
+export default SpanTimeRange;
