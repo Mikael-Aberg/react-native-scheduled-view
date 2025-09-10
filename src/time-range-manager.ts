@@ -20,7 +20,6 @@ class TimeRangeManager {
   private firstCheckTimeout: NodeJS.Timeout | null = null;
 
   private readonly timeRanges: Record<string, ITimeRange> = {};
-
   private readonly listeners = new Map<number, IListener>();
 
   public registerTime(
@@ -104,14 +103,18 @@ class TimeRangeManager {
     console.log(`Updating ${listenersKeys.length} listeners`);
     listenersKeys.forEach((key) => {
       const config = this.listeners.get(key);
-      if (!config) {
+      if (!config || config.ranges.length === 0) {
         return;
       }
 
-      if (config.ranges.some((x) => x.isNow)) {
+      const highestPriority = config.ranges
+        .filter((x) => x.isNow)
+        .sort((a, b) => a.priority - b.priority)[0];
+
+      if (highestPriority) {
         config.onShow();
       } else {
-        config?.onHide();
+        config.onHide();
       }
     });
   }
@@ -192,12 +195,11 @@ class TimeRangeManager {
     delete this.timeRanges[time.id];
   }
 
-  private createSpanTime(time: ISpanTimeConfig) {
-    const id = `${time.startDay}:${time.startTime}:${time.endDay}:${time.endTime}:${time.priority}`;
+  private createSpanTime(time: ISpanTimeConfig): ITimeRange {
+    const span = new SpanTimeRange(time);
+    this.timeRanges[span.id] ??= span;
 
-    this.timeRanges[id] ??= new SpanTimeRange(time);
-
-    return this.timeRanges[id];
+    return this.timeRanges[span.id]!;
   }
 
   private getToday() {

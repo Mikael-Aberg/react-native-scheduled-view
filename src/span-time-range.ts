@@ -1,6 +1,7 @@
 import type { ISpanTimeConfig, ITimeRange } from './types';
 
 const MINUTES_IN_A_DAY = 1440;
+const DEFAULT_PRIORITY = 10;
 
 class TimeRange implements ITimeRange {
   public readonly priority;
@@ -14,9 +15,9 @@ class TimeRange implements ITimeRange {
   private _isNow = false;
 
   constructor(config: ISpanTimeConfig) {
-    this.priority = config.priority;
+    this.priority = config.priority || DEFAULT_PRIORITY;
     this.type = config.type;
-    this.id = `${config.startDay}:${config.startTime}:${config.endDay}:${config.endTime}:${config.priority}`;
+    this.id = `${config.startDay}:${config.startTime}:${config.endDay}:${config.endTime}:${this.priority}`;
 
     this.startMinutes = this.toWeeklyMinutes(config.startDay, config.startTime);
     this.endMinutes = this.toWeeklyMinutes(config.endDay, config.endTime);

@@ -12,8 +12,15 @@ export default function App() {
     {
       type: 'daily',
       start: '10:00',
-      end: '20:00',
+      end: '22:00',
       priority: 1,
+      days: FULL_WEEK,
+    },
+    {
+      type: 'daily',
+      start: '10:00',
+      end: '22:00',
+      priority: 2,
       days: FULL_WEEK,
     },
   ];
