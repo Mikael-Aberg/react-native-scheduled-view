@@ -3,7 +3,7 @@ type PublicInterface<T> = Pick<T, keyof T>;
 export type ITimeRange = PublicInterface<import('./span-time-range').default>;
 
 type TimeConfigBase = {
-  priority: number;
+  priority?: number;
 };
 
 export interface IDailyTimeConfig extends TimeConfigBase {
