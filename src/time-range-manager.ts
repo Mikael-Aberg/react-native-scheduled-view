@@ -98,9 +98,8 @@ class TimeRangeManager {
   }
 
   private updateListeners(listenersKeys: number[]) {
-    console.log(this.listenerKeys);
-
     console.log(`Updating ${listenersKeys.length} listeners`);
+    const day = this.getToday().getDay();
     listenersKeys.forEach((key) => {
       const config = this.listeners.get(key);
       if (!config || config.ranges.length === 0) {
@@ -108,10 +107,10 @@ class TimeRangeManager {
       }
 
       const highestPriority = config.ranges
-        .filter((x) => x.isNow)
+        .filter((x) => x.coversDay(day))
         .sort((a, b) => a.priority - b.priority)[0];
 
-      if (highestPriority) {
+      if (highestPriority?.isNow) {
         config.onShow();
       } else {
         config.onHide();
@@ -159,7 +158,6 @@ class TimeRangeManager {
     times: string[] = this.timeKeys,
     listeners: number[] = this.listenerKeys
   ) {
-    console.log('Update');
     this.updateTimes(times);
     this.updateListeners(listeners);
   }

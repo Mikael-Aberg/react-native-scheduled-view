@@ -39,6 +39,13 @@ class TimeRange implements ITimeRange {
       this.startMinutes <= checkMinutes && checkMinutes < this.endMinutes;
   }
 
+  public coversDay(day: number) {
+    return (
+      this.startMinutes <= (day + 1) * MINUTES_IN_A_DAY &&
+      day * MINUTES_IN_A_DAY < this.endMinutes
+    );
+  }
+
   public addListener() {
     this._listeners++;
   }

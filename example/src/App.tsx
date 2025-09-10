@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { View, StyleSheet, Text, Button } from 'react-native';
 import ScheduledView, {
   FULL_WEEK,
+  WEEKENDS,
   type TimeConfig,
 } from 'react-native-scheduled-view';
 
@@ -13,15 +14,14 @@ export default function App() {
       type: 'daily',
       start: '10:00',
       end: '22:00',
-      priority: 1,
       days: FULL_WEEK,
     },
     {
       type: 'daily',
       start: '10:00',
-      end: '22:00',
-      priority: 2,
-      days: FULL_WEEK,
+      end: '18:00',
+      priority: 1,
+      days: WEEKENDS,
     },
   ];
 
