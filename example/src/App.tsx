@@ -6,7 +6,7 @@ export default function App() {
   const [random, setRandom] = useState(0);
 
   const ranges: TimeConfig[] = [
-    { type: 'daily', start: '10:00', end: '15:26', priority: 1 },
+    { type: 'daily', start: '10:00', end: '18:26', priority: 1 },
   ];
 
   return (
