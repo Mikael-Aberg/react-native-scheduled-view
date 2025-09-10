@@ -1,12 +1,32 @@
-import { multiply } from 'react-native-scheduled-view';
-import { Text, View, StyleSheet } from 'react-native';
-
-const result = multiply(3, 7);
+import { useState } from 'react';
+import { View, StyleSheet, Text, Button } from 'react-native';
+import ScheduledView, { type TimeConfig } from 'react-native-scheduled-view';
 
 export default function App() {
+  const [random, setRandom] = useState(0);
+
+  const ranges: TimeConfig[] = [
+    { type: 'daily', start: '10:00', end: '18:26', priority: 1 },
+  ];
+
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Button
+        title="Set random number"
+        onPress={() => {
+          setRandom(Math.random());
+        }}
+      />
+      <Text>{random}</Text>
+      <ScheduledView ranges={ranges}>
+        <Text>Hello!</Text>
+      </ScheduledView>
+      <ScheduledView ranges={ranges}>
+        <Text>Hello!</Text>
+      </ScheduledView>
+      <ScheduledView ranges={ranges}>
+        <Text>Hello!</Text>
+      </ScheduledView>
     </View>
   );
 }
