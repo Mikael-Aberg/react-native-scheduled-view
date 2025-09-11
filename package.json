@@ -1,7 +1,7 @@
 {
   "name": "react-native-scheduled-view",
   "version": "0.1.0",
-  "description": "wip",
+  "description": "Show and hide React Native components based on time schedules",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
   "module": "./lib/module/index.js",
@@ -39,7 +39,23 @@
   "keywords": [
     "react-native",
     "ios",
-    "android"
+    "android",
+    "schedule",
+    "timer",
+    "time-based",
+    "conditional-rendering",
+    "visibility",
+    "show-hide",
+    "time-range",
+    "component",
+    "typescript",
+    "business-hours",
+    "opening-hours",
+    "time-sensitive",
+    "conditional",
+    "local-time",
+    "cross-platform",
+    "lightweight"
   ],
   "repository": {
     "type": "git",
