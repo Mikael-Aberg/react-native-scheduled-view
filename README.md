@@ -23,7 +23,7 @@
 <tr>
 <td>
 
-� **Smart Scheduling**  
+🕒 **Smart Scheduling**  
 Schedule components for specific times and days with precision
 
 </td>
@@ -345,7 +345,7 @@ export default function AdvancedScheduledComponent() {
 
 **Important**: Always call `remove()` in cleanup to prevent memory leaks and ensure proper resource management.
 
-## �💡 Common Use Cases
+## 💡 Common Use Cases
 
 <details>
 <summary><strong>🏢 Business Hours Display</strong></summary>
