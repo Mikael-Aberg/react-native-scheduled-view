@@ -1,6 +1,6 @@
 {
   "name": "react-native-scheduled-view",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Show and hide React Native components based on time schedules",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
